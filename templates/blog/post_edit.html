@@ -1,0 +1,22 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Edit Your Profile{% endblock %}
+
+{% block content %}
+
+<h1>Edit Your Post</h1>
+{% if user.is_authenticated %}
+{% if user.pk is object.user.pk %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Update">
+</form>
+{% else %}
+<p>Invalid User</p>
+{% endif %}
+{% else %}
+<p>Please Login</p>
+{% endif %}
+{% endblock %}

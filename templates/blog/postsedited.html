@@ -1,0 +1,33 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p>
+  <a href="{% url 'logout' %}">Logout</a>
+  <br>
+  <a href="{% url 'blog:profile_edit' %}">Edit Your Profile</a>
+  <br>
+  <a href="{% url 'blog:home' %}">Feed</a></p>
+  <br>
+  <a href="{% url 'blog:followedposts' %}">Followed Users' Posts</a></p>
+  <br>
+  <h1>Previous Versions</h1>
+{% for post in post_list %}
+
+{% if post.current_post_pk == postpk %}
+  <p>
+  <h4><a href="{% url 'blog:profile' post.user.username %}">{{ post.user.username }}</a>:</h4>
+  {{ post.post_text }}
+  <hr>
+{% endif %}
+{% endfor %}
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Login</a>
+  <br>
+  <a href="{% url 'blog:signup' %}">Sign Up</a>
+{% endif %}
+{% endblock %}

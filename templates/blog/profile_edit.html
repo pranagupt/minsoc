@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Edit Your Profile{% endblock %}
+
+{% block content %}
+
+<h1>Edit Your Profile</h1>
+{% if user.is_authenticated %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Update">
+</form>
+{% else %}
+<p>Please login</p>
+{% endif %}
+{% endblock %}

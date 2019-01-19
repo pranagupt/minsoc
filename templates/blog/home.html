@@ -1,0 +1,56 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p>
+  <a href="{% url 'logout' %}">Logout</a>
+  <br>
+  <a href="{% url 'blog:profile_edit' %}">Edit Your Profile</a>
+  <br>
+  <a href="{% url 'blog:postcreate' %}">Create Post</a></p>
+  <br>
+  <a href="{% url 'blog:followedposts' %}">Followed Users' Posts</a></p>
+  <br>
+  <h1>Feed</h1>
+{% for post in post_list %}
+{% if post.is_before_edit is False and post.is_deleted is False %}
+  <p>
+  <h4><a href="{% url 'blog:profile' post.user.username %}">{{ post.user.username }}</a>:</h4>
+  {{ post.post_text }}
+  <br>
+  <a href="{% url 'blog:commentcreate' post.pk %}">Add Comment</a>
+  | <a href="{% url 'blog:postsedited' post.pk %}">Edited Posts</a>
+
+  {% if user.pk is post.user.pk %}
+
+   | <a href="{% url 'blog:post_edit' post.pk %}">Edit Post</a>
+   | <a href="{% url 'blog:post_delete' post.pk %}">Delete Post</a>
+  {% endif %}
+  {% if post.comment_set.all %}
+  <h5>Comments:</h5>
+  {% for comment in post.comment_set.all %}
+  {{ comment.user.username }}: {{ comment.comment_text }}<br>
+  {% endfor %}
+  {% endif %}
+  </p>
+
+  {% if not post.user.pk is user.pk and not post.user in user.follows.all %}
+  <form method="post" action="{% url 'blog:follow' %}">
+    {% csrf_token %}
+    <input type="hidden" name="followuser" value="{{ post.user }}">
+    <input type="submit" value="Follow User">
+  </form>
+  {% endif %}
+  <hr>
+{% endif %}
+{% endfor %}
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Login</a>
+  <br>
+  <a href="{% url 'blog:signup' %}">Sign Up</a>
+{% endif %}
+{% endblock %}

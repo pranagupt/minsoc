@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p>
+  <a href="{% url 'logout' %}">Logout</a>
+  <br>
+  <a href="{% url 'blog:profile_edit' %}">Edit Your Profile</a>
+  <br>
+  <a href="{% url 'blog:home' %}">Home</a></p>
+  <br><br>
+{% if user_req.first_name %}
+  <p>First Name: {{ user_req.first_name }}</p>
+{% endif %}
+{% if user_req.last_name %}
+  <p>Last Name: {{ user_req.last_name }}</p>
+{% endif %}
+{% if user_req.email %}
+  <p>Email: {{ user_req.email }}</p>
+{% endif %}
+
+{% if not user_req.email and not user_req.last_name and not user_req.first_name %}
+  <p>Nothing to show here</p>
+{% endif %}
+
+
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Login</a>
+  <br>
+  <a href="{% url 'blog:signup' %}">Sign Up</a>
+{% endif %}
+{% endblock %}
